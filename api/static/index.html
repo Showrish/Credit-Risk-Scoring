@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CreditIQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #141414;
+    --surface: #1f1f1f;
+    --surface2: #2a2a2a;
+    --border: #333;
+    --text: #fff;
+    --muted: #999;
+    --accent: #e50914;
+    --approve: #46d369;
+    --deny: #e50914;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+  }
+
+  nav {
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo span { color: var(--accent); }
+  .nav-meta { font-size: 12px; color: var(--muted); }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 48px; }
+
+  h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 40px; }
+
+  .stats {
+    display: flex;
+    margin-bottom: 40px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .stat { flex: 1; padding: 20px 24px; border-right: 1px solid var(--border); }
+  .stat:last-child { border-right: none; }
+  .stat-val { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+
+  .tabs { display: flex; margin-bottom: 32px; border-bottom: 1px solid var(--border); }
+
+  .tab {
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab:hover { color: var(--text); }
+
+  .layout { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 28px; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 24px 0 14px;
+  }
+
+  .section-title:first-child { margin-top: 0; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .row.three { grid-template-columns: 1fr 1fr 1fr; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+
+  label { font-size: 12px; color: var(--muted); font-weight: 500; }
+
+  input, select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+
+  input:focus, select:focus { border-color: #555; }
+  select option { background: #1f1f1f; }
+
+  .btn {
+    width: 100%;
+    padding: 13px;
+    margin-top: 24px;
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn:hover { background: #f40612; }
+  .btn:disabled { background: #555; cursor: not-allowed; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  .result-panel { position: sticky; top: 24px; }
+
+  .placeholder { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .placeholder-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
+  .placeholder p { font-size: 13px; line-height: 1.6; }
+
+  .decision-box {
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    display: none;
+  }
+
+  .decision-box.approved { background: rgba(70,211,105,0.1); border: 1px solid rgba(70,211,105,0.25); }
+  .decision-box.denied { background: rgba(229,9,20,0.1); border: 1px solid rgba(229,9,20,0.25); }
+
+  .decision-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .decision-verdict { font-size: 32px; font-weight: 700; margin-bottom: 6px; }
+  .decision-box.approved .decision-verdict { color: var(--approve); }
+  .decision-box.denied .decision-verdict { color: var(--deny); }
+  .decision-prob { font-size: 13px; color: var(--muted); }
+
+  .gauge { margin: 14px 0 0; }
+  .gauge-track { height: 4px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden; }
+  .gauge-fill { height: 100%; border-radius: 99px; transition: width 0.7s ease; }
+  .gauge-fill.approved { background: var(--approve); }
+  .gauge-fill.denied { background: var(--deny); }
+
+  .shap-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+
+  .factor { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+
+  .factor-name { font-size: 12px; color: var(--text); width: 120px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .factor-track { flex: 1; height: 4px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+  .factor-bar { height: 100%; border-radius: 99px; }
+  .factor-bar.pos { background: var(--approve); }
+  .factor-bar.neg { background: var(--deny); }
+
+  .factor-val { font-size: 11px; color: var(--muted); width: 48px; text-align: right; flex-shrink: 0; }
+
+  .error {
+    background: rgba(229,9,20,0.1);
+    border: 1px solid rgba(229,9,20,0.25);
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #ff6b6b;
+    margin-top: 14px;
+    display: none;
+  }
+
+  #batch-tab { display: none; }
+
+  textarea {
+    width: 100%;
+    height: 220px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    color: var(--text);
+    font-size: 12px;
+    font-family: monospace;
+    outline: none;
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  textarea:focus { border-color: #555; }
+
+  .batch-results { margin-top: 28px; display: none; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td { padding: 12px 14px; border-bottom: 1px solid #222; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .badge { padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .badge.approved { background: rgba(70,211,105,0.15); color: var(--approve); }
+  .badge.denied { background: rgba(229,9,20,0.15); color: var(--deny); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .fade { animation: fadeUp 0.3s ease forwards; }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+    .result-panel { position: static; }
+    main { padding: 24px; }
+    nav { padding: 16px 24px; }
+    .row { grid-template-columns: 1fr; }
+    .row.three { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Credit<span>IQ</span></div>
+  <div class="nav-meta">HMDA 2024 · LightGBM · SHAP</div>
+</nav>
+
+<main>
+  <h1>Mortgage Risk Scoring</h1>
+  <p class="subtitle">Predict loan approval outcomes with explainable AI — trained on 8.6M real HMDA records</p>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val">8.6M</div><div class="stat-label">Training Records</div></div>
+    <div class="stat"><div class="stat-val">0.877</div><div class="stat-label">ROC-AUC</div></div>
+    <div class="stat"><div class="stat-val">19</div><div class="stat-label">Features</div></div>
+    <div class="stat"><div class="stat-val">LightGBM</div><div class="stat-label">Model</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('single', this)">Single Prediction</button>
+    <button class="tab" onclick="switchTab('batch', this)">Batch Prediction</button>
+  </div>
+
+  <div id="single-tab">
+    <div class="layout">
+      <div class="card">
+        <div class="section-title">Financials</div>
+        <div class="row">
+          <div class="field"><label>Loan Amount ($)</label><input type="number" id="loan_amount" value="320000"/></div>
+          <div class="field"><label>Annual Income ($K)</label><input type="number" id="income" value="85"/></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Property Value ($)</label><input type="number" id="property_value" value="420000"/></div>
+          <div class="field"><label>Debt-to-Income (%)</label><input type="number" id="dti" value="35"/></div>
+        </div>
+
+        <div class="section-title">Loan Details</div>
+        <div class="row">
+          <div class="field">
+            <label>Loan Type</label>
+            <select id="loan_type"><option value="1">Conventional</option><option value="2">FHA</option><option value="3">VA</option><option value="4">FSA/RHS</option></select>
+          </div>
+          <div class="field">
+            <label>Loan Purpose</label>
+            <select id="loan_purpose"><option value="1">Home Purchase</option><option value="2">Home Improvement</option><option value="31">Refinancing</option><option value="32">Cash-out Refinancing</option></select>
+          </div>
+        </div>
+        <div class="row three">
+          <div class="field">
+            <label>Lien Status</label>
+            <select id="lien_status"><option value="1">First Lien</option><option value="2">Second Lien</option></select>
+          </div>
+          <div class="field">
+            <label>Occupancy</label>
+            <select id="occupancy_type"><option value="1">Primary</option><option value="2">Secondary</option><option value="3">Investment</option></select>
+          </div>
+          <div class="field">
+            <label>Preapproval</label>
+            <select id="preapproval"><option value="2">Not Requested</option><option value="1">Requested</option></select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Loan Product Type</label>
+            <select id="derived_loan_product_type">
+              <option value="Conventional:First Lien">Conventional: First Lien</option>
+              <option value="FHA:First Lien">FHA: First Lien</option>
+              <option value="VA:First Lien">VA: First Lien</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Dwelling Category</label>
+            <select id="derived_dwelling_category">
+              <option value="Single Family (1-4 Units):Site-Built">Single Family: Site-Built</option>
+              <option value="Multifamily:Site-Built">Multifamily: Site-Built</option>
+              <option value="Single Family (1-4 Units):Manufactured">Manufactured</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Conforming Loan Limit</label>
+            <select id="conforming_loan_limit"><option value="C">Conforming</option><option value="NC">Non-Conforming</option><option value="U">Undetermined</option></select>
+          </div>
+        </div>
+
+        <div class="section-title">Demographics</div>
+        <div class="row three">
+          <div class="field">
+            <label>Race</label>
+            <select id="derived_race">
+              <option>White</option>
+              <option>Black or African American</option>
+              <option>Asian</option>
+              <option>American Indian or Alaska Native</option>
+              <option>Native Hawaiian or Other Pacific Islander</option>
+              <option>2 or more minority races</option>
+              <option>Joint</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Ethnicity</label>
+            <select id="derived_ethnicity"><option>Not Hispanic or Latino</option><option>Hispanic or Latino</option><option>Joint</option></select>
+          </div>
+          <div class="field">
+            <label>Sex</label>
+            <select id="derived_sex"><option>Male</option><option>Female</option><option>Joint</option></select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Age Group</label>
+            <select id="applicant_age"><option>&lt;25</option><option>25-34</option><option selected>35-44</option><option>45-54</option><option>55-64</option><option>65-74</option><option>&gt;74</option></select>
+          </div>
+          <div class="field">
+            <label>Age Above 62</label>
+            <select id="applicant_age_above_62"><option value="No">No</option><option value="Yes">Yes</option></select>
+          </div>
+        </div>
+
+        <div class="section-title">Geography</div>
+        <div class="row">
+          <div class="field"><label>State Code</label><input type="text" id="state_code" value="MA" maxlength="2"/></div>
+          <div class="field"><label>County Code</label><input type="text" id="county_code" value="25017"/></div>
+        </div>
+
+        <button class="btn" id="predict-btn" onclick="predict()">
+          <div class="spinner" id="spinner"></div>
+          <span id="btn-text">Run Prediction</span>
+        </button>
+        <div class="error" id="error"></div>
+      </div>
+
+      <div class="result-panel">
+        <div class="card">
+          <div class="placeholder" id="placeholder">
+            <div class="placeholder-icon">◎</div>
+            <p>Fill in application<br>details and run prediction</p>
+          </div>
+          <div id="result" style="display:none">
+            <div class="decision-box" id="decision-box">
+              <div class="decision-label">Decision</div>
+              <div class="decision-verdict" id="verdict"></div>
+              <div class="gauge"><div class="gauge-track"><div class="gauge-fill" id="gauge" style="width:0%"></div></div></div>
+              <div class="decision-prob" id="prob-text" style="margin-top:8px"></div>
+            </div>
+            <div class="shap-title">Top Factors</div>
+            <div id="factors"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="batch-tab">
+    <div class="card">
+      <div class="section-title">JSON Input</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Paste an array of loan applications.</p>
+      <textarea id="batch-input" placeholder='[{"loan_amount": 320000, "income": 85, ...}]'></textarea>
+      <button class="btn" id="batch-btn" onclick="predictBatch()">
+        <div class="spinner" id="batch-spinner"></div>
+        <span id="batch-btn-text">Run Batch Prediction</span>
+      </button>
+      <div class="error" id="batch-error"></div>
+      <div class="batch-results" id="batch-results">
+        <div class="section-title" style="margin-top:28px">Results</div>
+        <table>
+          <thead><tr><th>#</th><th>Decision</th><th>Probability</th><th>Top Factor</th></tr></thead>
+          <tbody id="batch-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const API = "http://localhost:8000";
+
+  function switchTab(name, el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('single-tab').style.display = name === 'single' ? 'block' : 'none';
+    document.getElementById('batch-tab').style.display = name === 'batch' ? 'block' : 'none';
+  }
+
+  function setLoading(id, spinId, textId, loading) {
+    document.getElementById(id).disabled = loading;
+    document.getElementById(spinId).style.display = loading ? 'block' : 'none';
+    document.getElementById(textId).style.display = loading ? 'none' : 'inline';
+  }
+
+  function getPayload() {
+    return {
+      loan_amount: parseFloat(document.getElementById('loan_amount').value),
+      income: parseFloat(document.getElementById('income').value),
+      property_value: parseFloat(document.getElementById('property_value').value),
+      dti: parseFloat(document.getElementById('dti').value),
+      loan_type: document.getElementById('loan_type').value,
+      loan_purpose: document.getElementById('loan_purpose').value,
+      lien_status: document.getElementById('lien_status').value,
+      derived_race: document.getElementById('derived_race').value,
+      derived_ethnicity: document.getElementById('derived_ethnicity').value,
+      derived_sex: document.getElementById('derived_sex').value,
+      applicant_age: document.getElementById('applicant_age').value,
+      applicant_age_above_62: document.getElementById('applicant_age_above_62').value,
+      state_code: document.getElementById('state_code').value.toUpperCase(),
+      county_code: document.getElementById('county_code').value,
+      conforming_loan_limit: document.getElementById('conforming_loan_limit').value,
+      derived_loan_product_type: document.getElementById('derived_loan_product_type').value,
+      derived_dwelling_category: document.getElementById('derived_dwelling_category').value,
+      occupancy_type: document.getElementById('occupancy_type').value,
+      preapproval: document.getElementById('preapproval').value,
+    };
+  }
+
+  function renderResult(data) {
+    const approved = data.decision === 'Approved';
+    const box = document.getElementById('decision-box');
+    box.className = 'decision-box fade ' + (approved ? 'approved' : 'denied');
+    box.style.display = 'block';
+    document.getElementById('verdict').textContent = data.decision;
+    document.getElementById('prob-text').textContent = `${(data.probability * 100).toFixed(1)}% approval probability`;
+    const g = document.getElementById('gauge');
+    g.className = 'gauge-fill ' + (approved ? 'approved' : 'denied');
+    setTimeout(() => g.style.width = (data.probability * 100) + '%', 50);
+    const container = document.getElementById('factors');
+    container.innerHTML = '';
+    const maxAbs = Math.max(...Object.values(data.top_factors).map(Math.abs));
+    Object.entries(data.top_factors).forEach(([name, val]) => {
+      const pct = Math.abs(val) / maxAbs * 100;
+      container.innerHTML += `<div class="factor fade">
+        <div class="factor-name">${name}</div>
+        <div class="factor-track"><div class="factor-bar ${val > 0 ? 'pos' : 'neg'}" style="width:${pct}%"></div></div>
+        <div class="factor-val">${val > 0 ? '+' : ''}${val.toFixed(3)}</div>
+      </div>`;
+    });
+    document.getElementById('placeholder').style.display = 'none';
+    document.getElementById('result').style.display = 'block';
+  }
+
+  async function predict() {
+    const errEl = document.getElementById('error');
+    errEl.style.display = 'none';
+    setLoading('predict-btn', 'spinner', 'btn-text', true);
+    try {
+      const res = await fetch(`${API}/predict`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(getPayload()) });
+      if (!res.ok) throw new Error(`Server error: ${res.status}`);
+      renderResult(await res.json());
+    } catch(e) {
+      errEl.textContent = `${e.message} — make sure the API server is running.`;
+      errEl.style.display = 'block';
+    } finally { setLoading('predict-btn', 'spinner', 'btn-text', false); }
+  }
+
+  async function predictBatch() {
+    const errEl = document.getElementById('batch-error');
+    errEl.style.display = 'none';
+    setLoading('batch-btn', 'batch-spinner', 'batch-btn-text', true);
+    let payload;
+    try { payload = JSON.parse(document.getElementById('batch-input').value); }
+    catch { errEl.textContent = 'Invalid JSON.'; errEl.style.display = 'block'; setLoading('batch-btn', 'batch-spinner', 'batch-btn-text', false); return; }
+    try {
+      const res = await fetch(`${API}/predict/batch`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ applications: payload }) });
+      if (!res.ok) throw new Error(`Server error: ${res.status}`);
+      const data = await res.json();
+      const tbody = document.getElementById('batch-tbody');
+      tbody.innerHTML = '';
+      data.results.forEach(r => {
+        const top = Object.entries(r.top_factors).sort((a,b) => Math.abs(b[1]) - Math.abs(a[1]))[0];
+        tbody.innerHTML += `<tr>
+          <td>${r.application_id}</td>
+          <td><span class="badge ${r.decision.toLowerCase()}">${r.decision}</span></td>
+          <td>${(r.probability * 100).toFixed(1)}%</td>
+          <td style="color:var(--muted);font-size:12px">${top[0]} (${top[1]>0?'+':''}${top[1].toFixed(3)})</td>
+        </tr>`;
+      });
+      document.getElementById('batch-results').style.display = 'block';
+    } catch(e) {
+      errEl.textContent = `${e.message} — make sure the API server is running.`;
+      errEl.style.display = 'block';
+    } finally { setLoading('batch-btn', 'batch-spinner', 'batch-btn-text', false); }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.pyo
+data/hmda.duckdb
+data/hmda_processed.csv
+api/models/lgbm_model.pkl
+api/models/le_dict.pkl
+api/models/feature_cols.pkl
+dashboard/
