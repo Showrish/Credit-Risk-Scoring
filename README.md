@@ -12,7 +12,7 @@ End-to-end machine learning system for predicting mortgage loan approval outcome
 
 ---
 
-## Dashboard
+## Power BI Dashboard
 
 ![Power BI Dashboard](screenshots/dashboard.png)
 
