@@ -5,10 +5,13 @@
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)
 ![DuckDB](https://img.shields.io/badge/Database-DuckDB-FFF000?logoColor=black)
 ![PowerBI](https://img.shields.io/badge/Dashboard-Power%20BI-F2C811?logo=powerbi&logoColor=black)
+![AWS](https://img.shields.io/badge/Deployed-AWS%20EC2-FF9900?logo=amazonaws&logoColor=white)
 ![ROC-AUC](https://img.shields.io/badge/ROC--AUC-0.877-brightgreen)
 ![Records](https://img.shields.io/badge/Records-8.6M-red)
 
 End-to-end machine learning system for predicting mortgage loan approval outcomes — trained on **8.6 million real loan applications** from the FFIEC/CFPB HMDA 2024 national dataset. Includes SHAP explainability, demographic bias auditing, a REST API with a dark UI, and an interactive Power BI dashboard.
+
+🌐 **Live Demo:** http://52.71.254.49:8000
 
 ---
 
@@ -65,6 +68,7 @@ Mortgage approval models are in production at every major bank and lender. The *
 | Backend | FastAPI |
 | Frontend | HTML / CSS / JavaScript |
 | Dashboard | Power BI |
+| Deployment | AWS EC2 (t3.micro) — systemd managed |
 | Environment | Python, Google Colab, pandas, scikit-learn |
 
 ---
@@ -145,6 +149,8 @@ Five analytical queries run directly on DuckDB across 8.68M records.
 
 ## API
 
+**Live:** http://52.71.254.49:8000
+
 **Run locally:**
 ```bash
 cd api
@@ -195,6 +201,35 @@ Open `http://localhost:8000` for the UI or `http://localhost:8000/docs` for Swag
 ```
 
 **POST /predict/batch** — accepts a list of applications, returns decisions for all.
+
+---
+
+## Project Structure
+
+```
+credit-risk-scoring/
+├── api/
+│   ├── app.py
+│   ├── models/
+│   │   ├── lgbm_model.pkl
+│   │   ├── le_dict.pkl
+│   │   └── feature_cols.pkl
+│   └── static/
+│       └── index.html
+├── dashboard/
+│   └── credit_risk_dashboard.pdf
+├── data/
+│   └── queries/
+│       ├── approval_by_income.sql
+│       ├── approval_by_state.sql
+│       ├── denial_by_race.sql
+│       ├── dti_vs_denial.sql
+│       └── loan_amount_vs_approval.sql
+├── screenshots/
+└── README.md
+```
+
+---
 
 ## Data Source
 
