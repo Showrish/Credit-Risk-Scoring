@@ -1,4 +1,11 @@
 # CreditIQ — Mortgage Risk Scoring
+---
+
+## Why This Project
+
+Mortgage approval models are in production at every major bank and lender. The **Fair Housing Act** and **Equal Credit Opportunity Act** legally require lenders to explain denials and audit for demographic bias — making SHAP explainability a regulatory necessity, not just a portfolio add-on. This project mirrors that full production pipeline end-to-end.
+
+---
 
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
 ![LightGBM](https://img.shields.io/badge/Model-LightGBM-orange)
@@ -48,12 +55,6 @@ End-to-end machine learning system for predicting mortgage loan approval outcome
 ![SHAP Feature Importance](screenshots/shap_importance.png)
 
 *Global feature importance ranked by mean absolute SHAP value — DTI is the dominant predictor by a wide margin*
-
----
-
-## Why This Project
-
-Mortgage approval models are in production at every major bank and lender. The **Fair Housing Act** and **Equal Credit Opportunity Act** legally require lenders to explain denials and audit for demographic bias — making SHAP explainability a regulatory necessity, not just a portfolio add-on. This project mirrors that full production pipeline end-to-end.
 
 ---
 
