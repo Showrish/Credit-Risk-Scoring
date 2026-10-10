@@ -1,4 +1,4 @@
-# CreditIQ — Mortgage Risk Scoring
+# CreditIQ - Mortgage Risk Scoring
 ---
 
 ## Why This Project
