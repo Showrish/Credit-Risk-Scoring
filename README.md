@@ -3,7 +3,7 @@
 
 ## Why This Project
 
-Mortgage approval models are in production at every major bank and lender. The **Fair Housing Act** and **Equal Credit Opportunity Act** legally require lenders to explain denials and audit for demographic bias — making SHAP explainability a regulatory necessity, not just a portfolio add-on. This project mirrors that full production pipeline end-to-end.
+Mortgage approval models are in production at every major bank and lender. The **Fair Housing Act** and **Equal Credit Opportunity Act** legally require lenders to explain denials and audit for demographic bias - making SHAP explainability a regulatory necessity, not just a portfolio add-on. This project mirrors that full production pipeline end-to-end.
 
 ---
 
@@ -147,8 +147,6 @@ Five analytical queries run directly on DuckDB across 8.68M records.
 ---
 
 ## API
-
-**Live:** http://52.71.254.49:8000
 
 **Run locally:**
 ```bash
