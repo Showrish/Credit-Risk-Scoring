@@ -1,0 +1,8 @@
+*.html linguist-detectable=false
+*.css  linguist-detectable=false
+*.js   linguist-detectable=false
+
+*.sql linguist-language=SQL
+
+*.pbix binary
+*.pkl  binary
