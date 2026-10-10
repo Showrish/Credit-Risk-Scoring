@@ -18,8 +18,6 @@ Mortgage approval models are in production at every major bank and lender. The *
 
 End-to-end machine learning system for predicting mortgage loan approval outcomes — trained on **8.6 million real loan applications** from the FFIEC/CFPB HMDA 2024 national dataset. Includes SHAP explainability, demographic bias auditing, a REST API with a dark UI, and an interactive Power BI dashboard.
 
-🌐 **Live Demo:** http://52.71.254.49:8000
-
 ---
 
 ## Power BI Dashboard
