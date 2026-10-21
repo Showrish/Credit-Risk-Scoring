@@ -24,7 +24,7 @@ End-to-end machine learning system for predicting mortgage loan approval outcome
 
 ![Power BI Dashboard](screenshots/dashboard.png)
 
-*9M applications · 75.3% approval rate · 24.7% denial rate · $298K avg loan — filterable by state*
+*8.68M applications · 75.3% approval rate · 24.7% denial rate · $298K avg loan — filterable by state*
 
 ---
 
