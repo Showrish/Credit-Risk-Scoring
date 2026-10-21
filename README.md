@@ -3,7 +3,7 @@
 
 ## Why This Project
 
-Mortgage approval models are in production at every major bank and lender. The **Fair Housing Act** and **Equal Credit Opportunity Act** legally require lenders to explain denials and audit for demographic bias - making SHAP explainability a regulatory necessity, not just a portfolio add-on. This project mirrors that full production pipeline end-to-end.
+Mortgage approval models are in production at every major bank and lender. The **Fair Housing Act** and **Equal Credit Opportunity Act** prohibit lending discrimination, and ECOA requires lenders to explain denials, which makes explainability a regulatory necessity, not just a portfolio add-on. This project builds that kind of pipeline end to end on public data.
 
 ---
 
@@ -12,11 +12,13 @@ Mortgage approval models are in production at every major bank and lender. The *
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)
 ![DuckDB](https://img.shields.io/badge/Database-DuckDB-FFF000?logoColor=black)
 ![PowerBI](https://img.shields.io/badge/Dashboard-Power%20BI-F2C811?logo=powerbi&logoColor=black)
-![AWS](https://img.shields.io/badge/Deployed-AWS%20EC2-FF9900?logo=amazonaws&logoColor=white)
+![AWS](https://img.shields.io/badge/Cloud-AWS%20EC2-FF9900?logo=amazonaws&logoColor=white)
 ![ROC-AUC](https://img.shields.io/badge/ROC--AUC-0.877-brightgreen)
-![Records](https://img.shields.io/badge/Records-8.6M-red)
+![Records](https://img.shields.io/badge/Records-8.68M-red)
 
-End-to-end machine learning system for predicting mortgage loan approval outcomes — trained on **8.6 million real loan applications** from the FFIEC/CFPB HMDA 2024 national dataset. Includes SHAP explainability, demographic bias auditing, a REST API with a dark UI, and an interactive Power BI dashboard.
+End-to-end machine learning system for predicting mortgage loan approval outcomes, built on **8.68 million real loan applications** from the FFIEC/CFPB HMDA 2024 national dataset (6.94M used for training). Includes SHAP explainability, demographic bias auditing, a REST API with a dark UI, and an interactive Power BI dashboard.
+
+> **Research demo, not a lending tool.** Race, ethnicity and sex are included as model features only so their influence can be measured with SHAP. A real lender can't use them in credit decisions.
 
 ---
 
@@ -24,7 +26,7 @@ End-to-end machine learning system for predicting mortgage loan approval outcome
 
 ![Power BI Dashboard](screenshots/dashboard.png)
 
-*8.68M applications · 75.3% approval rate · 24.7% denial rate · $298K avg loan — filterable by state*
+*8.68M applications · 75.3% approval rate · 24.7% denial rate · $298K avg loan, filterable by state*
 
 ---
 
@@ -52,7 +54,7 @@ End-to-end machine learning system for predicting mortgage loan approval outcome
 
 ![SHAP Feature Importance](screenshots/shap_importance.png)
 
-*Global feature importance ranked by mean absolute SHAP value — DTI is the dominant predictor by a wide margin*
+*Global feature importance ranked by mean absolute SHAP value. DTI is the dominant predictor by a wide margin.*
 
 ---
 
@@ -67,7 +69,7 @@ End-to-end machine learning system for predicting mortgage loan approval outcome
 | Backend | FastAPI |
 | Frontend | HTML / CSS / JavaScript |
 | Dashboard | Power BI |
-| Deployment | AWS EC2 (t3.micro) — systemd managed |
+| Deployment | AWS EC2 (t3.micro), managed by systemd (live demo currently offline) |
 | Environment | Python, Google Colab, pandas, scikit-learn |
 
 ---
@@ -83,7 +85,7 @@ Trained on 6.94M samples (80/20 stratified split). Logistic Regression and Rando
 | Random Forest | 0.853 | 0.846 | 0.618 | 77s |
 | Logistic Regression | 0.750 | 0.706 | 0.528 | 72s |
 
-LightGBM selected as final model — best ROC-AUC and best F1 on the denied class, which is the harder and more consequential class for real-world use.
+LightGBM selected as final model: best ROC-AUC and best F1 on the denied class, which is the harder and more consequential class for real-world use.
 
 ---
 
@@ -138,11 +140,11 @@ Five analytical queries run directly on DuckDB across 8.68M records.
 
 ## Key Findings
 
-- **DTI is the #1 denial driver** — DTI above 60% results in a 91.7% denial rate, effectively a hard cutoff
-- **Racial lending disparity confirmed** — Black and Native American applicants denied at ~15 percentage points higher than White applicants, corroborated by SHAP values showing `derived_race` as the 5th most impactful feature
-- **Income gap is severe** — 33 percentage point approval gap between under $50K and over $200K income segments
-- **Larger loans get approved more easily** — $500K–$1M loans approved at 86.6% vs 64.1% for under $150K, reflecting lower risk on high-value properties in strong markets
-- **Regional disparities** — Midwest states approve at 83–85%, Southern states at 69–71%
+- **DTI is the #1 denial driver:** DTI above 60% results in a 91.7% denial rate, effectively a hard cutoff
+- **Racial disparity in raw denial rates:** Black and American Indian / Alaska Native applicants were denied about 15 percentage points more often than White applicants. This is an audit finding, not proof of discrimination, since raw rates don't account for income, DTI or credit history. SHAP also ranks `derived_race` 5th among the model's features, so the pattern carries into the model.
+- **Income gap is severe:** 33 percentage point approval gap between under $50K and over $200K income segments
+- **Larger loans get approved more easily:** $500K–$1M loans approved at 86.6% vs 64.1% for under $150K, likely reflecting lower risk on high-value properties in strong markets
+- **Regional disparities:** Midwest states approve at 83–85%, Southern states at 69–71%
 
 ---
 
@@ -157,7 +159,7 @@ uvicorn app:app --reload
 
 Open `http://localhost:8000` for the UI or `http://localhost:8000/docs` for Swagger.
 
-**POST /predict — single application**
+**POST /predict: single application**
 ```json
 {
   "loan_amount": 320000,
@@ -197,7 +199,7 @@ Open `http://localhost:8000` for the UI or `http://localhost:8000/docs` for Swag
 }
 ```
 
-**POST /predict/batch** — accepts a list of applications, returns decisions for all.
+**POST /predict/batch** accepts a list of applications and returns decisions for all.
 
 ---
 
